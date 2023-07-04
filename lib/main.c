@@ -20,6 +20,7 @@ struct ThreadArgs {
     float best_c;
 };
 
+// separa los campos de una línea
 const char* getfield(char* line, int num)
 {
     const char* tok;
@@ -33,6 +34,7 @@ const char* getfield(char* line, int num)
     return NULL;
 }
 
+// lee las observaciones del archivo de entrada
 void readObservations(const char* input_file) {
     FILE* fp;
     if (!(fp = fopen(input_file, "r"))) {
@@ -66,12 +68,16 @@ void readObservations(const char* input_file) {
     fclose(fp);
 }
 
+
+// Función para ajustar un modelo a los puntos seleccionados
 void fitModel(float mss_points[MSS_SIZE][2], float* m, float* c) {
     // Fit a model using the MSS
     *m = (mss_points[1][1] - mss_points[0][1]) / (mss_points[1][0] - mss_points[0][0]);
     *c = mss_points[0][1] - (*m * mss_points[0][0]);
 }
 
+
+// Función para contar el número de inliers
 int countInliers(float m, float c) {
     int num_inliers = 0;
 
@@ -84,6 +90,7 @@ int countInliers(float m, float c) {
 
     return num_inliers;
 }
+
 
 // Función ejecutada por cada hilo
 void* fitModelAndCountInliersThread(void* arg) {
@@ -122,6 +129,8 @@ void* fitModelAndCountInliersThread(void* arg) {
     return NULL;
 }
 
+
+// Función principal
 void fitModelAndCountInliers(int num_iterations, int num_threads) {
     srand(time(NULL));
 
